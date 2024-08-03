@@ -1,10 +1,11 @@
 import os
+import subprocess
+import sys
+import platform
+import shutil
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 
-import shutil
-
-import main
 
 
 def is_running_in_docker():
@@ -38,8 +39,21 @@ def update_all() -> None:
     else:
         print("Not running in Docker, skipping config file copy")
 
-    main.main2()
+    process = subprocess.Popen("python3 main.py", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
+    while True:
+        line = process.stdout.readline()
+        if not line:
+            break
+        try:
+            sys.stdout.write(line.decode())
+            sys.stdout.flush()
+        except:
+            pass
+
+    return_code = process.wait()
+
+    print("return " + str(return_code))
 
 if __name__ == "__main__":
     update_all()
