@@ -11,7 +11,7 @@ from cache_gen import cache_gen
 from csv_gen import csv_gen
 from user_info import User_info
 
-max_concurrent_requests = 1  # 最大并发数量，默认为8，对自己网络有自信的可以调高; 遇到多次下载失败时适当降低
+max_concurrent_requests = 8  # 最大并发数量，默认为8，对自己网络有自信的可以调高; 遇到多次下载失败时适当降低
 
 
 def del_special_char(string):
@@ -441,14 +441,10 @@ def main(_user_info: object):
     print(f'{_user_info.name}下载完成\n\n')
 
 
-def main2():
+if __name__ == '__main__':
     _start = time.time()
     for i in settings['user_lst'].split(','):
         main(User_info(i))
         start_label = True
         First_Page = True
     print(f'共耗时:{time.time() - _start}秒\n共调用{request_count}次API\n共下载{down_count}份图片/视频')
-
-
-if __name__ == '__main__':
-    main2()
