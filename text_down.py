@@ -1,15 +1,13 @@
-import httpx
-
+import csv
+import json
 import os
 import re
-import json
-import csv
 import time
 from datetime import datetime
 
+import httpx
+
 from user_info import User_info
-
-
 
 ##########配置区域##########
 cookie = 'auth_token=xxxxxxxxxxx; ct0=xxxxxxxxxxx;'
