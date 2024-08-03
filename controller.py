@@ -39,7 +39,9 @@ def update_all() -> None:
     else:
         print("Not running in Docker, skipping config file copy")
 
-    process = subprocess.Popen("python3 main.py", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    command = ["python3", "/app/main.py"]
+
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     while True:
         line = process.stdout.readline()
