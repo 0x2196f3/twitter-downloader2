@@ -8,14 +8,6 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 
 
-def is_running_in_docker():
-    with open('/proc/1/cgroup', 'r') as f:
-        for line in f:
-            if 'container' in line:
-                return True
-    return False
-
-
 scheduler = BlockingScheduler()
 
 bin_path = "/app"
@@ -26,19 +18,16 @@ save_path = "/downloads"
 def update_all() -> None:
     os.chdir(bin_path)
 
-    if is_running_in_docker():
-        config_file = '/config/settings.json'
-        workdir = os.getcwd()
-        dest_file = os.path.join(workdir, 'settings.json')
+    config_file = '/config/settings.json'
+    workdir = os.getcwd()
+    dest_file = os.path.join(workdir, 'settings.json')
 
-        if os.path.exists(config_file):
-            shutil.copy(config_file, dest_file)
-            print(f"Copied {config_file} to {dest_file}")
-        else:
-            print(f"Config file {config_file} not found")
+    if os.path.exists(config_file):
+        shutil.copy(config_file, dest_file)
+        print(f"Copied {config_file} to {dest_file}")
     else:
-        print("Not running in Docker, skipping config file copy")
-
+        print(f"Config file {config_file} not found")
+    
     command = ["python3", "/app/main.py"]
 
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
