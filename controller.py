@@ -12,8 +12,9 @@ bin_path = "/app"
 config_path = "/config"
 save_path = "/downloads"
 
+retry_times = 3
 
-def update_all() -> None:
+def update_all():
     os.chdir(bin_path)
 
     config_file = config_path + '/settings.json'
@@ -43,13 +44,24 @@ def update_all() -> None:
 
     print("return " + str(return_code))
 
+    return return_code
+
+def update():
+    for _ in range(retry_times):
+        try:
+            return_code = update_all()
+        except:
+            return_code = -1
+        
+        if return_code == 0:
+            break
 
 if __name__ == "__main__":
     interval = os.environ.get('INTERVAL')
     if interval is None or not interval.isdigit():
-        interval = 60 * 60 * 12
+        interval = 60 * 60 * 6
     else:
         interval = int(interval)
 
-    scheduler.add_job(update_all, 'interval', seconds=interval, next_run_time=datetime.datetime.now())
+    scheduler.add_job(update, 'interval', seconds=interval, next_run_time=datetime.datetime.now())
     scheduler.start()
